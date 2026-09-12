@@ -1,0 +1,1 @@
+export function Metric({label,value,sub}:{label:string;value:string|number;sub?:string}){return <div className="glass rounded-2xl p-4"><div className="text-xs text-white/40">{label}</div><div className="mt-2 text-2xl font-semibold tracking-tight">{value}</div>{sub&&<div className="mt-1 text-xs text-white/35">{sub}</div>}</div>}

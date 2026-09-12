@@ -1,0 +1,3 @@
+import {NextResponse} from 'next/server'; import {z} from 'zod'; import {challengeTrade} from '@/lib/ai'; import {getLiveAsset} from '@/lib/market';
+const schema=z.object({symbol:z.string(),side:z.enum(['BUY','SELL','HOLD']),confidence:z.number().min(0).max(100),thesis:z.string().max(2000).default(''),amount:z.number().positive().max(1000000).default(1000)});
+export async function POST(req:Request){try{const b=await req.json();const p=schema.parse(b);return NextResponse.json(await challengeTrade({asset:await getLiveAsset(p.symbol),side:p.side,confidence:p.confidence,thesis:p.thesis,amount:p.amount}));}catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Invalid request'},{status:400})}}

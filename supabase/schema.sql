@@ -1,0 +1,5 @@
+create extension if not exists pgcrypto;
+create table if not exists public.challenge_runs (id uuid primary key default gen_random_uuid(), user_id uuid, symbol text not null, side text not null, confidence int not null, evidence_quality int, confidence_gap int, verdict text not null, payload jsonb not null, created_at timestamptz default now());
+create table if not exists public.paper_trades (id uuid primary key default gen_random_uuid(), user_id uuid, challenge_id uuid references public.challenge_runs(id), symbol text not null, side text not null, qty numeric not null, entry numeric not null, status text not null default 'OPEN', pnl numeric default 0, created_at timestamptz default now(), closed_at timestamptz);
+create table if not exists public.decision_memory (id uuid primary key default gen_random_uuid(), user_id uuid, challenge_id uuid references public.challenge_runs(id), lesson text not null, created_at timestamptz default now());
+-- Enable RLS in production and add user-scoped policies after authentication is configured.

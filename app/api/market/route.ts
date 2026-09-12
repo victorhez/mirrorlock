@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server'; import {getLiveAssets} from '@/lib/market'; export const dynamic='force-dynamic'; export async function GET(){return NextResponse.json({assets:await getLiveAssets(),mode:'bitget-public-with-demo-fallback'});} 
