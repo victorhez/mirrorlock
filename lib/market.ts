@@ -21,16 +21,23 @@ export function getAsset(symbol:string){
   return getAssets().find(a=>a.symbol===symbol)||getAssets()[0];
 }
 
+function num(v:any,fallback:number):number{const n=typeof v==='string'?parseFloat(v):Number(v);return Number.isFinite(n)?n:fallback}
+
 export async function getLiveAssets():Promise<Asset[]>{
   try{
     const r=await fetch('https://api.bitget.com/api/v2/spot/market/tickers',{cache:'no-store'});
+    if(!r.ok)throw new Error('market fetch failed');
     const j=await r.json();
     const wanted=new Set(['BTCUSDT','ETHUSDT','SOLUSDT']);
-    const live=(j.data||[]).filter((x:any)=>wanted.has(x.symbol)).map((x:any)=>{
-      const b=base.find(a=>a.symbol===x.symbol)!;
-      return {...b,price:Number(x.lastPrice),change24h:Number(x.price24hPcnt)*100,volatility:b.volatility};
-    });
-    return live.length?[...live,...base.filter(a=>!wanted.has(a.symbol))]:getAssets();
+    const live:(Asset[])=(j.data||[]).filter((x:any)=>wanted.has(x.symbol)).map((x:any)=>{
+      const b=base.find(a=>a.symbol===x.symbol);
+      if(!b)return null as any;
+      const price=num(x.lastPrice,b.price);
+      const change24h=num(x.price24hPcnt,b.change24h/100)*100;
+      return {...b,price,change24h:Number.isFinite(change24h)?change24h:b.change24h,volatility:b.volatility};
+    }).filter(Boolean);
+    const xs=[...live,...base.filter(a=>!wanted.has(a.symbol))];
+    return xs.length===base.length?xs:getAssets();
   }catch{return getAssets()}
 }
 
