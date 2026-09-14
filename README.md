@@ -43,19 +43,6 @@ Implement the market and execution adapters behind `lib/market.ts` and the paper
 
 Run `supabase/schema.sql`, configure Supabase variables, then replace browser `localStorage` in `lib/store.ts` with authenticated Supabase calls. Add RLS policies scoped to `auth.uid()` before enabling user accounts.
 
-## Demo script
-
-1. Open Challenge a Trade.
-2. Select BTC.
-3. Select BUY.
-4. Set confidence to 90%.
-5. Enter: `Momentum is strong and I think the next breakout will continue.`
-6. Click Challenge my trade.
-7. Reveal the Confidence Gap and Mirror case.
-8. Show the Judge verdict.
-9. If approved, open a paper trade.
-10. Show My paper trades and CSV export.
-11. Show Mirror insights.
 
 ## Competition story
 
